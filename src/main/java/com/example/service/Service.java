@@ -19,7 +19,6 @@ public class Service {
         this.repository.save(model);
         return "Employee added";
     }
-    
     public Optional<Model> searchEmployee(long emp_id){
         return this.repository.findById(emp_id);
     }
