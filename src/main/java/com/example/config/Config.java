@@ -3,6 +3,7 @@ package com.example.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -23,7 +24,11 @@ import javax.sql.DataSource;
 @EnableSwagger2
 @EnableWebSecurity
 public class Config  extends WebSecurityConfigurerAdapter {
-
+    
+    public  static  String SQL_QUERY_FOR_USERS="select username , password, enabled  from users where username=?";
+    public  static  String SQL_QUERY_FOR_AUTHORITIES="select username, authority from authorities where username=?";
+    
+    
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2).select()
@@ -42,8 +47,8 @@ public class Config  extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
-   
 
+                                                  /*--------with hardcoded users-----------*/
     /*@Override
         protected void configure(AuthenticationManagerBuilder auth) throws Exception {
             InMemoryUserDetailsManager userDetailsManager=new InMemoryUserDetailsManager();
@@ -54,16 +59,18 @@ public class Config  extends WebSecurityConfigurerAdapter {
     @Autowired
     DataSource dataSource;
     
-                                   /*--------with hardcoded users-----------*/
-  /*  @Override
+                                 
+
+              /*-----------------with users stored in db as spring security default (JDBC AUTHENTICATION)------------------*/
+  @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication().dataSource(dataSource)
                 .passwordEncoder(passwordEncoder())
-                .usersByUsernameQuery("select username , password, enabled  from users where username=?")
-                .authoritiesByUsernameQuery("select username, authority from authorities where username=?");
-    }*/
+                .usersByUsernameQuery(SQL_QUERY_FOR_USERS)
+                .authoritiesByUsernameQuery(SQL_QUERY_FOR_AUTHORITIES);
+    }
     
-                           /*-----------------with users stored in db as spring security default------------------*/
+                           
     @Bean
     public UserDetailsService userDetailsService(DataSource dataSource){
         return new JdbcUserDetailsManager(dataSource);
