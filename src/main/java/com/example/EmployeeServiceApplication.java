@@ -30,7 +30,7 @@ public class EmployeeServiceApplication {
                     new EmployeeDTO(1993658, "Maria", "Lopez", "Tech Lead", "12.10.2014", "Pune"),
                     new EmployeeDTO(1993659, "Aaron", "Wilson", "Developer", "01.11.2021", "Belfast"),
                     new EmployeeDTO(1993680, "Ankan", "Ghosh", "Developer", "01.09.2021", "Kolkata"));
-            employees.forEach(emp -> service.addEmployee(emp));
+            employees.forEach(service::addEmployee);
         };
     }
 

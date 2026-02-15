@@ -23,13 +23,9 @@ public class Controller {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateEmployee(@PathVariable Long id, @RequestBody EmployeeDTO updatedEmployee) {
-
-        String response = service.updateEmployee(id, updatedEmployee);
-        if (response.equals("Employee not found")) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
-        return ResponseEntity.ok(response);
+    public EmployeeDTO updateEmployee(@PathVariable Long id, @RequestBody EmployeeDTO updatedEmployee) {
+        EmployeeDTO employeeDTO=service.updateEmployee(id, updatedEmployee);
+        return employeeDTO;
     }
 
     @GetMapping("/search")

@@ -22,17 +22,19 @@ public class Service {
         this.repository.save(employeeDTO);
         log.info("Employees added to DB");
     }
-    public String updateEmployee(Long id, EmployeeDTO updatedEmployee) {
+    public EmployeeDTO updateEmployee(Long id, EmployeeDTO updatedEmployee) {
         Optional<EmployeeDTO> optionalEmployee = searchEmployee(id);
         if (optionalEmployee.isEmpty()) {
-            return "Employee not found";
+            return null;
         }
         EmployeeDTO existingEmployee = optionalEmployee.get();
         existingEmployee.setEmp_first_name(updatedEmployee.getEmp_first_name());
         existingEmployee.setEmp_last_name(updatedEmployee.getEmp_last_name());
-        existingEmployee.setDepartment(updatedEmployee.getDepartment());
-        repository.save(existingEmployee);
-        return "Employee updated successfully";
+        existingEmployee.setRole(updatedEmployee.getRole());
+        existingEmployee.setJoining_date(updatedEmployee.getJoining_date());
+        existingEmployee.setWork_location(updatedEmployee.getWork_location());
+        EmployeeDTO updatedDetails=repository.save(existingEmployee);
+        return updatedDetails;
     }
 
     public Optional<EmployeeDTO> searchEmployee(long emp_id){

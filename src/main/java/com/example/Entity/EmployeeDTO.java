@@ -15,7 +15,7 @@ public class EmployeeDTO {
     private long emp_id;
     private String emp_first_name;
     private String emp_last_name;
-    private String department;
+    private String role;
     private String joining_date;
     private String work_location;
 }
