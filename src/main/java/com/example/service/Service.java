@@ -1,6 +1,6 @@
 package com.example.service;
 
-import com.example.Entity.Model;
+import com.example.Entity.EmployeeDTO;
 import com.example.Repository.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,14 +12,30 @@ public class Service {
     @Autowired
     private Repository repository;
   
-    public List<Model> findAll() {
+    public List<EmployeeDTO> findAll() {
         return repository.findAll();
     }
-    public String addEmployee(Model model){
-        this.repository.save(model);
-        return "Employee added";
+
+    public String updateEmployee(Long id, EmployeeDTO updatedEmployee) {
+
+        Optional<EmployeeDTO> optionalEmployee = repository.findById(id);
+
+        if (optionalEmployee.isEmpty()) {
+            return "Employee not found";
+        }
+
+        EmployeeDTO existingEmployee = optionalEmployee.get();
+
+        existingEmployee.setEmp_first_name(updatedEmployee.getEmp_first_name());
+        existingEmployee.setEmp_last_name(updatedEmployee.getEmp_last_name());
+        existingEmployee.setDepartment(updatedEmployee.getDepartment());
+
+        repository.save(existingEmployee);
+
+        return "Employee updated successfully";
     }
-    public Optional<Model> searchEmployee(long emp_id){
+
+    public Optional<EmployeeDTO> searchEmployee(long emp_id){
         return this.repository.findById(emp_id);
     }
     public String deleteEmployee(long emp_id){
