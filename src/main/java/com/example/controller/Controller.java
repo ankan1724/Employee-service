@@ -3,14 +3,17 @@ package com.example.controller;
 import com.example.Entity.EmployeeDTO;
 import com.example.service.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/Employee")
+@RequestMapping("/employee")
 public class Controller {
+
     @Autowired
     private Service service;
 
@@ -19,10 +22,14 @@ public class Controller {
         return service.findAll();
     }
 
-    @PostMapping("/update")
-    public String addEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        this.service.addEmployee(employeeDTO);
-        return "Employee added";
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> updateEmployee(@PathVariable Long id, @RequestBody EmployeeDTO updatedEmployee) {
+
+        String response = service.updateEmployee(id, updatedEmployee);
+        if (response.equals("Employee not found")) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/search")
